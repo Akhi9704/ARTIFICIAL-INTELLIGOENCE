@@ -1,0 +1,25 @@
+from collections import deque 
+  
+ def BFS(graph, start_vertex): 
+     visited = set() 
+     queue = deque([start_vertex]) 
+     visited.add(start_vertex) 
+  
+     while queue: 
+         current_vertex = queue.popleft() 
+         print(current_vertex) 
+  
+         for neighbor in graph[current_vertex]: 
+             if neighbor not in visited: 
+                 visited.add(neighbor) 
+                 queue.append(neighbor) 
+  
+ # sample usage 
+ if _name_ == "_main_": 
+     graph = { 
+         0: [1, 2], 
+         1: [2], 
+         2: [0, 3], 
+         3: [3] 
+     } 
+     BFS(graph, 0)

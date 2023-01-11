@@ -1,0 +1,29 @@
+class Graph: 
+     def _init_(self, numVertices): 
+         self.numVertices = numVertices 
+         self.adjMatrix = [[-1] * numVertices for _ in range(numVertices)] 
+         self.visited = [False] * numVertices 
+  
+     def add_edge(self, v1, v2): 
+         self.adjMatrix[v1][v2] = 1 
+         self.adjMatrix[v2][v1] = 1 
+  
+     def dfs(self, v): 
+         print(v, end=' ') 
+         self.visited[v] = True 
+         for i in range(self.numVertices): 
+             if self.adjMatrix[v][i] == 1 and not self.visited[i]: 
+                 self.dfs(i) 
+  
+     def get_dfs_traversal(self, v): 
+         self.visited = [False] * self.numVertices 
+         self.dfs(v) 
+  
+ g = Graph(4) 
+ g.add_edge(0, 1) 
+ g.add_edge(0, 2) 
+ g.add_edge(1, 2) 
+ g.add_edge(2, 3) 
+  
+ print("DFS Traversal:") 
+ g.get_dfs_traversal(2)

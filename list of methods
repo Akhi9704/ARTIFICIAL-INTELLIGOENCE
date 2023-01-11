@@ -1,0 +1,22 @@
+ Creating a List
+my_list = [1, 2, 3, 4, 5]
+
+# Add elements to the list (using append method)
+my_list.append(6)
+print("List after adding elements using append: ", my_list)
+
+# Add multiple elements to the list (using extend method)
+my_list.extend([7, 8, 9])
+print("List after adding elements using extend: ", my_list)
+
+# Delete elements from the list (using remove method)
+my_list.remove(7)
+print("List after removing elements using remove: ", my_list)
+
+# Delete elements from the list (using del keyword)
+del my_list[3]
+print("List after removing elements using del: ", my_list)
+
+# Delete elements from the list (using pop method)
+my_list.pop()
+print("List after removing elements using pop: ", my_list)

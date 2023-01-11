@@ -1,0 +1,48 @@
+from collections import deque 
+  
+ def is_valid(state): 
+     m, c, b = state 
+     if m < 0 or c < 0 or m > 3 or c > 3: 
+         return False 
+     if b == 1: 
+         if m > c and m > 0: 
+             return False 
+         if c > m and c > 0: 
+             return False 
+     if b == -1: 
+         if m < c and m < 3: 
+             return False 
+         if c < m and c < 3: 
+             return False 
+     return True 
+  
+ def find_solution(): 
+     start = (3, 3, 1) 
+     end = (0, 0, -1) 
+     queue = deque([[start]]) 
+     visited = set() 
+     while queue: 
+         path = queue.popleft() 
+         state = path[-1] 
+         if state == end: 
+             return path 
+         if state in visited: 
+             continue 
+         visited.add(state) 
+         for i in range(3): 
+             for j in range(3): 
+                 if i + j > 0 and i + j <= 2: 
+                     new_state = (state[0] - i * state[2], state[1] - j * state[2], -state[2]) 
+                     if is_valid(new_state): 
+                         new_path = list(path) 
+                         new_path.append(new_state) 
+                         queue.append(new_path) 
+     return None 
+  
+ path = find_solution() 
+ if path is None: 
+     print("No solution found") 
+ else: 
+     print("Solution found:") 
+     for state in path: 
+         print(state)

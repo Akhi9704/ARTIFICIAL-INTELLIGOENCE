@@ -1,0 +1,52 @@
+from ortools.constraint_solver import routing_enums_pb2 
+ from ortools.constraint_solver import pywrapcp 
+  
+ def create_data_model(locations): 
+     data = {} 
+     data['distance_matrix'] = locations 
+     data['num_vehicles'] = 1 
+     data['depot'] = 0 
+     return data 
+  
+ def tsp_solver(locations): 
+     tsp_size = len(locations) 
+     num_routes = 1 
+     depot = 0 
+     # Create routing model 
+     if tsp_size > 0: 
+         routing = pywrapcp.RoutingModel(tsp_size, num_routes, depot) 
+         search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters() 
+         # Create the distance callback, which takes two arguments (the from and to node indices) 
+         # and returns the distance between these nodes. 
+         dist_callback = create_distance_callback(locations) 
+         routing.SetArcCostEvaluatorOfAllVehicles(dist_callback) 
+         # Solve the problem. 
+         assignment = routing.SolveWithParameters(search_parameters) 
+         if assignment: 
+             # Solution distance. 
+             print("Total distance: " + str(assignment.ObjectiveValue()) + " miles\n") 
+             # Display the solution. 
+             index = routing.Start(0) 
+             plan_output = 'Route:\n' 
+             route_distance = 0 
+             while not routing.IsEnd(index): 
+                 plan_output += str(locations[routing.IndexToNode(index)]) + ' -> ' 
+                 previous_index = index 
+                 index = assignment.Value(routing.NextVar(index)) 
+                 route_distance += routing.GetArcCostForVehicle(previous_index, index, 0) 
+             plan_output += '0' 
+             print(plan_output) 
+             print("Route distance: " + str(route_distance) + " miles") 
+     else: 
+         print('Specify an instance greater than 0.') 
+          
+ def create_distance_callback(locations): 
+     def distance_callback(from_node, to_node): 
+         return int(distance.distance(locations[from_node], locations[to_node]).miles) 
+     return distance_callback 
+  
+ # the main function to run all the above function 
+ if _name_ == '_main_': 
+     locations = [(10, 10), (10, 20), (20, 10), (20, 20), (15, 25), (10, 30)] 
+     data = create_data_model(locations) 
+     tsp_solver(data)

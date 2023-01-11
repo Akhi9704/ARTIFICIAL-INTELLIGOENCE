@@ -1,0 +1,19 @@
+from constraint import * 
+  
+ # Define the problem 
+ problem = Problem() 
+  
+ # Define the variables and their domains 
+ states = ["WA", "NT", "Q", "NSW", "V", "SA", "T"] 
+ colors = ["red", "green", "blue"] 
+ problem.addVariables(states, colors) 
+  
+ # Define the constraints 
+ problem.addConstraint(AllDifferentConstraint(), states) 
+ problem.addConstraint(lambda a, b: a != b, ("WA", "NT"), ("NT", "Q"), ("Q", "NSW"), ("NSW", "V"), ("SA", "WA"), ("SA", "NT"), ("SA", "Q")) 
+  
+ # Solve the problem 
+ solutions = problem.getSolutions() 
+  
+ # Print one of the solutions 
+ print(solutions[0])

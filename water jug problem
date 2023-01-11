@@ -1,0 +1,44 @@
+from collections import deque
+
+def water_jug(jug1, jug2, target):
+    # Initialize starting state
+    start = (0, 0)
+    # Initialize a queue for BFS
+    queue = deque([start])
+    # Create a set to keep track of visited states
+    visited = {start}
+    # Loop until the queue is empty
+    while queue:
+        # Get the next state from the queue
+        state = queue.popleft()
+        # Check if the target state has been reached
+        if state[0] == target or state[1] == target:
+            return state
+        # Generate new states and add them to the queue
+        for new_state in get_next_states(state, jug1, jug2):
+            if new_state not in visited:
+                visited.add(new_state)
+                queue.append(new_state)
+    # If the target state was not reached, return failure
+    return None
+
+def get_next_states(state, jug1, jug2):
+    states = []
+    # Fill jug1
+    states.append((jug1, state[1]))
+    # Fill jug2
+    states.append((state[0], jug2))
+    # Empty jug1
+    states.append((0, state[1]))
+    # Empty jug2
+    states.append((state[0], 0))
+    # Pour jug1 into jug2
+    pour1_into2 = min(state[0], jug2 - state[1])
+    states.append((state[0] - pour1_into2, state[1] + pour1_into2))
+    # Pour jug2 into jug1
+    pour2_into1 = min(state[1], jug1 - state[0])
+    states.append((state[0] + pour2_into1, state[1] - pour2_into1))
+    return states
+
+# Test the function
+print(water_jug(3, 5, 4))

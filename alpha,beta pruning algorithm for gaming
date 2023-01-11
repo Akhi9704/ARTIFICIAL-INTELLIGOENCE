@@ -1,0 +1,41 @@
+class Game: 
+     def _init_(self): 
+         # Initialize the game state 
+         pass 
+  
+     def actions(self, state): 
+         # Return a list of legal actions for the current state 
+         pass 
+  
+     def result(self, state, action): 
+         # Return the new state after the specified action is taken 
+         pass 
+  
+     def utility(self, state, player): 
+         # Return the utility of the specified state for the specified player 
+         pass 
+  
+     def terminal_test(self, state): 
+         # Return True if the specified state is a terminal state 
+         pass 
+  
+     def alphabeta(self, state, depth, alpha, beta, player): 
+         if depth == 0 or self.terminal_test(state): 
+             return self.utility(state, player) 
+  
+         if player == "Max": 
+             value = float("-inf") 
+             for action in self.actions(state): 
+                 value = max(value, self.alphabeta(self.result(state, action), depth-1, alpha, beta, "Min")) 
+                 alpha = max(alpha, value) 
+                 if alpha >= beta: 
+                     break 
+             return value 
+         else: 
+             value = float("inf") 
+             for action in self.actions(state): 
+                 value = min(value, self.alphabeta(self.result(state, action), depth-1, alpha, beta, "Max")) 
+                 beta = min(beta, value) 
+                 if alpha >= beta: 
+                     break 
+             return value

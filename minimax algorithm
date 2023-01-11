@@ -1,0 +1,89 @@
+# Game state 
+ board = [[0, 0, 0], 
+          [0, 0, 0], 
+          [0, 0, 0]] 
+  
+ player = 1 
+  
+  
+ def minimax(state, depth, player): 
+     if player == 1: 
+         best = [-1, -1, -infinity] 
+     else: 
+         best = [-1, -1, +infinity] 
+      
+     if depth == 0 or game_over(state): 
+         score = evaluate(state) 
+         return [-1, -1, score] 
+      
+     for cell in empty_cells(state): 
+         x, y = cell[0], cell[1] 
+         state[x][y] = player 
+         score = minimax(state, depth-1, -player) 
+         state[x][y] = 0 
+         score[0], score[1] = x, y 
+          
+         if player == 1: 
+             if score[2] > best[2]: 
+                 best = score 
+         else: 
+             if score[2] < best[2]: 
+                 best = score 
+                  
+     return best 
+  
+ def empty_cells(state): 
+     cells = [] 
+     for x, row in enumerate(state): 
+         for y, cell in enumerate(row): 
+             if cell == 0: 
+                 cells.append([x, y]) 
+     return cells 
+  
+ def game_over(state): 
+     # horizontal 
+     for row in state: 
+         if row.count(row[0]) == len(row) and row[0] != 0: 
+             return True 
+     # vertical 
+     for col in range(len(state)): 
+         if state[0][col] == state[1][col] == state[2][col] != 0: 
+             return True 
+     # diagonal 
+     diag1 = [state[0][0], state[1][1], state[2][2]] 
+     diag2 = [state[0][2], state[1][1], state[2][0]] 
+     diag = diag1+diag2 
+     if diag.count(diag[0]) == len(diag) and diag[0] != 0: 
+         return True 
+  
+     return False 
+  
+ def evaluate(state): 
+     if game_over(state) and player == 1: 
+         return -1 
+     elif game_over(state) and player == -1: 
+         return 1 
+     else: 
+         return 0 
+  
+ def play(): 
+     while not game_over(board): 
+         if player == 1: 
+             x, y, _ = minimax(board, depth=len(empty_cells(board)), player=player) 
+             if [x, y] not in empty_cells(board): 
+                 break 
+             board[x][y] = player 
+             player = -player 
+         else: 
+             x = int(input("x: ")) 
+             y = int(input("y: ")) 
+             board[x][y] = player 
+             player = -player 
+         print_board(board) 
+     print("Game over") 
+  
+ def print_board(board): 
+     for row in board: 
+         print(" ".join(str(x) for x in row)) 
+  
+ play

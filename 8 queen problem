@@ -1,0 +1,35 @@
+def solve(board):
+    if not find_next_empty_square(board):
+        return True # solved
+
+    for i in range(8):
+        if is_valid(board, i):
+            board[i] = 1
+            if solve(board):
+                return True
+            board[i] = 0
+
+    return False
+
+def find_next_empty_square(board):
+    for i in range(8):
+        if board[i] == 0:
+            return i
+    return None
+
+def is_valid(board, column):
+    for i in range(column):
+        if board[i] == board[column]:
+            return False
+
+        if abs(board[i] - board[column]) == abs(i - column):
+            return False
+
+    return True
+
+if _name_ == '_main_':
+    board = [0, 0, 0, 0, 0, 0, 0, 0]
+    if solve(board):
+        print(board)
+    else:
+        print("No solution.")

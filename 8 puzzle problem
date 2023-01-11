@@ -1,0 +1,51 @@
+mport heapq
+
+class State(object):
+    def _init_(self, board, moves, last_move, cost):
+        self.board = board
+        self.moves = moves
+        self.last_move = last_move
+        self.cost = cost
+
+    def _lt_(self, other):
+        return self.cost < other.cost
+
+    def is_goal(self):
+        return self.board == [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+
+    def neighbors(self):
+        i, j = self.find_blank()
+        for di, dj in [[-1, 0], [1, 0], [0, -1], [0, 1]]:
+            ni, nj = i + di, j + dj
+            if ni >= 0 and ni < 3 and nj >= 0 and nj < 3:
+                yield self.swap(i, j, ni, nj)
+
+    def find_blank(self):
+        for i in range(3):
+            for j in range(3):
+                if self.board[i][j] == 0:
+                    return i, j
+
+    def swap(self, i1, j1, i2, j2):
+        board = [row[:] for row in self.board]
+        board[i1][j1], board[i2][j2] = board[i2][j2], board[i1][j1]
+        return State(board, self.moves + 1, (i1, j1, i2, j2), self.cost + 1)
+
+def solve(board):
+    start = State(board, 0, None, 0)
+    heap = [start]
+    visited = set()
+    while heap:
+        state = heapq.heappop(heap)
+        if state.is_goal():
+            return state.moves
+        if str(state.board) in visited:
+            continue
+        visited.add(str(state.board))
+        for neighbor in state.neighbors():
+            heapq.heappush(heap, neighbor)
+
+if _name_ == '_main_':
+    board = [[1, 2, 3], [4, 0, 6], [7, 5, 8]]
+    moves = solve(board)
+    print(moves)
